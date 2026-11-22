@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<!-- Define que o documento usa HTML5 -->
+<html lang="pt-BR">
+<head>
+  <!-- Permite acentos e caracteres especiais -->
+  <meta charset="utf-8">
+
+  <!-- Faz a página se ajustar à tela do celular.
+       viewport-fit=cover deixa o conteúdo ocupar a tela toda (celulares com notch) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <!-- Cor da barra do navegador no celular -->
+  <meta name="theme-color" content="#0b0d10">
+
+  <title>Boxe Timer</title>
+
+  <!-- Liga o arquivo de estilos (CSS) -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Container principal: guarda as duas telas do app -->
+  <div id="app">
+
+    <!-- ================= TELA 1: CONFIGURAÇÃO ================= -->
+    <section id="tela-config" class="tela">
+
+      <!-- Topo: logo + botões de som e vibração -->
+      <header class="topo">
+        <div class="marca">
+          <div class="logo">🥊</div>
+          <span>BOXE TIMER</span>
+        </div>
+
+        <div class="toggles">
+          <!-- aria-label ajuda leitores de tela a entender o botão -->
+          <button id="btn-som" class="btn-icone" aria-label="Ligar ou desligar o som">🔊</button>
+          <button id="btn-vibracao" class="btn-icone" aria-label="Ligar ou desligar a vibração">📳</button>
+        </div>
+      </header>
+
+      <!-- Presets: configurações prontas.
+           Os valores ficam nos atributos data-* e o JS lê eles -->
+      <div id="presets" class="presets">
+        <button class="preset" data-round="60"  data-descanso="40" data-rounds="10">Treino 10×1</button>
+        <button class="preset" data-round="180" data-descanso="60" data-rounds="3">Boxe 3×3</button>
+        <button class="preset" data-round="180" data-descanso="60" data-rounds="12">Saco 12×3</button>
+        <button class="preset" data-round="20"  data-descanso="10" data-rounds="8">HIIT 20/10</button>
+      </div>
+
+      <!-- Cartão com o resumo do treino -->
+      <div class="resumo">
+        <small>Duração do treino</small>
+        <div id="total" class="resumo-total">16:00</div>
+        <div id="detalhes" class="resumo-detalhes"></div>
+      </div>
+
+      <!-- Lista de ajustes. Cada botão tem:
+           data-campo = qual valor da configuração ele altera
+           data-direcao = -1 (diminui) ou 1 (aumenta) -->
+      <div class="lista">
+
+        <div class="ajuste">
+          <div class="ajuste-texto">
+            <small>Preparação</small>
+            <b id="valor-prep">00:10</b>
+          </div>
+          <button class="btn-passo" data-campo="prep" data-direcao="-1">−</button>
+          <button class="btn-passo" data-campo="prep" data-direcao="1">+</button>
+        </div>
+
+        <div class="ajuste">
+          <div class="ajuste-texto">
+            <small>Tempo do round</small>
+            <b id="valor-round">01:00</b>
+          </div>
+          <button class="btn-passo" data-campo="round" data-direcao="-1">−</button>
+          <button class="btn-passo" data-campo="round" data-direcao="1">+</button>
+        </div>
+
+        <div class="ajuste">
+          <div class="ajuste-texto">
+            <small>Descanso</small>
+            <b id="valor-descanso">00:40</b>
+          </div>
+          <button class="btn-passo" data-campo="descanso" data-direcao="-1">−</button>
+          <button class="btn-passo" data-campo="descanso" data-direcao="1">+</button>
+        </div>
+
+        <div class="ajuste">
+          <div class="ajuste-texto">
+            <small>Rounds</small>
+            <b id="valor-rounds">10</b>
+          </div>
+          <button class="btn-passo" data-campo="rounds" data-direcao="-1">−</button>
+          <button class="btn-passo" data-campo="rounds" data-direcao="1">+</button>
+        </div>
+
+        <div class="ajuste">
+          <div class="ajuste-texto">
+            <small>Aviso antes do fim</small>
+            <b id="valor-aviso">00:10</b>
+          </div>
+          <button class="btn-passo" data-campo="aviso" data-direcao="-1">−</button>
+          <button class="btn-passo" data-campo="aviso" data-direcao="1">+</button>
+        </div>
+
+      </div>
+
+      <button id="btn-iniciar" class="btn-iniciar">INICIAR TREINO</button>
+    </section>
+
+
+    <!-- ================= TELA 2: TREINO EM ANDAMENTO =================
+         Começa escondida (classe "escondido"). O JS mostra quando o treino inicia.
+         data-fase muda a cor da tela: preparacao, round, descanso ou fim -->
+    <section id="tela-treino" class="tela escondido" data-fase="round">
+
+      <!-- Etiqueta com o nome da fase atual -->
+      <div id="fase" class="etiqueta">ROUND 1/10</div>
+
+      <!-- Relógio circular. O SVG desenha dois círculos:
+           um de fundo (trilho) e outro que vai "esvaziando" (arco) -->
+      <div class="relogio-box">
+        <svg viewBox="0 0 300 300">
+          <circle class="trilho" cx="150" cy="150" r="130"></circle>
+          <circle id="arco" class="arco" cx="150" cy="150" r="130"></circle>
+        </svg>
+        <!-- O tempo fica no meio do círculo -->
+        <div class="relogio-centro">
+          <div id="relogio">01:00</div>
+        </div>
+      </div>
+
+      <!-- Bolinhas que mostram em qual round estamos (o JS preenche) -->
+      <div id="bolinhas" class="bolinhas"></div>
+
+      <!-- Texto de ajuda: o que vem a seguir -->
+      <div id="legenda" class="legenda"></div>
+
+      <div class="controles">
+        <button id="btn-pausar">Pausar</button>
+        <button id="btn-parar">Parar</button>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- O JavaScript fica no FINAL do body para o HTML carregar antes.
+       Assim os elementos já existem quando o script tentar encontrá-los. -->
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,400 @@
+/* ==========================================================
+   BOXE TIMER - ESTILOS
+   Tema escuro, bordas arredondadas e visual moderno.
+   ========================================================== */
+
+/* ---------- VARIÁVEIS DE COR ----------
+   Guardar as cores em variáveis (--nome) facilita mudar o tema depois.
+   Para usar: var(--nome) */
+:root {
+  --fundo: #0b0d10;
+  --cartao: #151a20;
+  --cartao-claro: #1c232b;
+  --texto: #f2f5f7;
+  --texto-suave: #8b97a1;
+  --borda: #242c35;
+  --destaque: #ff5a3c;
+
+  /* Cores de cada fase do treino */
+  --cor-round: #ff4d4d;
+  --cor-descanso: #2ecc8f;
+  --cor-preparacao: #4da3ff;
+  --cor-aviso: #ffb020;
+
+  /* Avisa ao navegador que o site é escuro (barras de rolagem, etc.) */
+  color-scheme: dark;
+}
+
+/* ---------- RESET BÁSICO ----------
+   Remove margens padrão e faz o tamanho (width/height) incluir padding e borda */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  -webkit-tap-highlight-color: transparent; /* tira o "flash" azul ao tocar no celular */
+}
+
+body {
+  background-color: var(--fundo);
+  color: var(--texto);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  min-height: 100vh;
+  /* Deixa o conteúdo longe da área do notch/barra do celular */
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+button {
+  font-family: inherit;   /* botões não herdam a fonte sozinhos, então forçamos */
+  color: inherit;
+  border: none;
+  cursor: pointer;
+  touch-action: manipulation; /* evita zoom ao tocar duas vezes rápido */
+}
+
+/* Classe usada pelo JS para esconder uma tela.
+   !important garante que ela vença qualquer outro display */
+.escondido {
+  display: none !important;
+}
+
+/* ---------- ESTRUTURA GERAL ---------- */
+#app {
+  max-width: 480px;      /* no PC o app não fica gigante */
+  margin: 0 auto;        /* centraliza na tela */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Cada tela ocupa o espaço todo, com itens em coluna */
+.tela {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 16px;             /* espaço entre os elementos */
+  padding: 20px 18px 24px;
+}
+
+/* ---------- TOPO ---------- */
+.topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* logo na esquerda, botões na direita */
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  font-size: 15px;
+}
+
+.logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  /* degradê diagonal entre duas cores */
+  background: linear-gradient(135deg, var(--destaque), #ff2e63);
+  display: grid;
+  place-items: center;   /* centraliza o emoji */
+  font-size: 18px;
+}
+
+.toggles {
+  display: flex;
+  gap: 8px;
+}
+
+/* Botões de som/vibração: apagados por padrão, "acesos" com a classe .ligado */
+.btn-icone {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background-color: var(--cartao);
+  font-size: 18px;
+  opacity: 0.5;
+}
+
+.btn-icone.ligado {
+  opacity: 1;
+  background-color: var(--cartao-claro);
+  box-shadow: inset 0 0 0 1px var(--borda); /* borda interna fina */
+}
+
+/* ---------- PRESETS ---------- */
+.presets {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;          /* rola para o lado se não couber */
+  scrollbar-width: none;     /* esconde a barra de rolagem (Firefox) */
+}
+
+.presets::-webkit-scrollbar {
+  display: none;             /* esconde a barra de rolagem (Chrome/Safari) */
+}
+
+.preset {
+  flex: none;                /* não deixa o botão encolher */
+  padding: 10px 16px;
+  border-radius: 999px;      /* valor alto = formato de pílula */
+  background-color: var(--cartao);
+  color: var(--texto-suave);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Preset escolhido no momento */
+.preset.ativo {
+  background-color: var(--destaque);
+  color: #fff;
+}
+
+/* ---------- CARTÃO DE RESUMO ---------- */
+.resumo {
+  background: linear-gradient(160deg, var(--cartao-claro), var(--cartao));
+  border-radius: 28px;
+  padding: 22px;
+  box-shadow: inset 0 0 0 1px var(--borda);
+}
+
+.resumo small {
+  color: var(--texto-suave);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.resumo-total {
+  font-size: 56px;
+  font-weight: 800;
+  /* faz todos os números terem a mesma largura (o relógio não "treme") */
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  margin-top: 4px;
+}
+
+.resumo-detalhes {
+  color: var(--texto-suave);
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+/* ---------- LISTA DE AJUSTES ---------- */
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ajuste {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: var(--cartao);
+  border-radius: 22px;
+  padding: 12px 12px 12px 18px;
+}
+
+.ajuste-texto {
+  flex: 1;   /* ocupa todo o espaço livre, empurrando os botões para a direita */
+}
+
+.ajuste-texto small {
+  display: block;
+  color: var(--texto-suave);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.ajuste-texto b {
+  font-size: 28px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Botões redondos de + e − */
+.btn-passo {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;   /* 50% = círculo perfeito */
+  background-color: var(--cartao-claro);
+  font-size: 24px;
+  line-height: 1;
+  box-shadow: inset 0 0 0 1px var(--borda);
+}
+
+/* :active = enquanto o dedo está pressionando */
+.btn-passo:active {
+  background-color: var(--destaque);
+}
+
+/* ---------- BOTÃO INICIAR ---------- */
+.btn-iniciar {
+  margin-top: auto;      /* empurra o botão para o fim da tela */
+  height: 64px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, var(--destaque), #ff2e63);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  box-shadow: 0 10px 30px rgba(255, 70, 70, 0.3); /* brilho em volta */
+}
+
+.btn-iniciar:active {
+  transform: scale(0.98); /* "afunda" um pouquinho ao clicar */
+}
+
+/* ==========================================================
+   TELA DO TREINO
+   ========================================================== */
+
+/* Centraliza tudo (horizontal e vertical) */
+#tela-treino {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 18px;
+
+  /* Cor padrão da fase (round). O JS muda o atributo data-fase
+     e os seletores abaixo trocam as variáveis */
+  --cor-fase: var(--cor-round);
+  --cor-fase-fundo: rgba(255, 77, 77, 0.18);
+}
+
+#tela-treino[data-fase="descanso"] {
+  --cor-fase: var(--cor-descanso);
+  --cor-fase-fundo: rgba(46, 204, 143, 0.18);
+}
+
+#tela-treino[data-fase="preparacao"] {
+  --cor-fase: var(--cor-preparacao);
+  --cor-fase-fundo: rgba(77, 163, 255, 0.18);
+}
+
+#tela-treino[data-fase="fim"] {
+  --cor-fase: var(--texto-suave);
+  --cor-fase-fundo: rgba(139, 151, 161, 0.18);
+}
+
+/* A classe .aviso é adicionada pelo JS quando o round está acabando */
+#tela-treino.aviso {
+  --cor-fase: var(--cor-aviso);
+  --cor-fase-fundo: rgba(255, 176, 32, 0.18);
+}
+
+.etiqueta {
+  padding: 8px 20px;
+  border-radius: 999px;
+  background-color: var(--cor-fase-fundo);
+  color: var(--cor-fase);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  font-size: 15px;
+}
+
+/* Caixa do relógio circular.
+   position: relative permite posicionar o texto por cima do SVG */
+.relogio-box {
+  position: relative;
+  width: min(82vw, 340px);  /* o menor entre 82% da largura da tela e 340px */
+  aspect-ratio: 1;          /* altura = largura (quadrado) */
+}
+
+.relogio-box svg {
+  width: 100%;
+  height: 100%;
+  /* O círculo SVG começa a desenhar na direita; giramos -90° para começar no topo */
+  transform: rotate(-90deg);
+}
+
+.relogio-box circle {
+  fill: none;              /* só o contorno, sem preenchimento */
+  stroke-width: 14;        /* espessura da linha */
+  stroke-linecap: round;   /* pontas arredondadas */
+}
+
+.trilho {
+  stroke: var(--cartao-claro);
+}
+
+.arco {
+  stroke: var(--cor-fase);
+  transition: stroke 0.3s;  /* a troca de cor é suave */
+  /* 816.8 é o comprimento do círculo (2 x 3,1416 x 130).
+     O JS mexe no dashoffset para "esvaziar" o círculo */
+  stroke-dasharray: 816.8;
+  stroke-dashoffset: 0;
+}
+
+/* Texto no centro do círculo */
+.relogio-centro {
+  position: absolute;
+  inset: 0;               /* top, right, bottom e left = 0 */
+  display: grid;
+  place-content: center;
+}
+
+#relogio {
+  font-size: min(20vw, 88px);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.legenda {
+  color: var(--texto-suave);
+  font-size: 14px;
+  padding: 0 24px;
+}
+
+/* Bolinhas de progresso dos rounds */
+.bolinhas {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 300px;
+  min-height: 12px;
+}
+
+.bolinhas i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--cartao-claro);
+}
+
+.bolinhas i.feito {
+  background-color: var(--cor-fase);       /* round já terminado */
+}
+
+.bolinhas i.atual {
+  box-shadow: 0 0 0 2px var(--cor-fase);   /* round em andamento (só contorno) */
+}
+
+/* Botões Pausar e Parar */
+.controles {
+  display: flex;
+  gap: 14px;
+  width: 100%;
+}
+
+.controles button {
+  flex: 1;
+  height: 58px;
+  border-radius: 20px;
+  background-color: var(--cartao);
+  font-size: 16px;
+  font-weight: 700;
+  box-shadow: inset 0 0 0 1px var(--borda);
+}
+
+.controles button:first-child {
+  background-color: var(--cartao-claro);
+}
